@@ -9,7 +9,7 @@ variable "server_port" {
   default     = 8080
 }
 
-resource "aws_instance" "example" {
+resource "aws_instance" "instance" {
   ami                    = "ami-0620d12a9cf777c87"
   instance_type          = "t2.micro"
   vpc_security_group_ids = [aws_security_group.example_sg.id]
@@ -37,6 +37,6 @@ resource "aws_security_group" "example_sg" {
 }
 
 output "public_ip" {
-  value       = aws_instance.example.public_ip
+  value       = aws_instance.instance.public_ip
   description = "public ip of the web server"
 }
