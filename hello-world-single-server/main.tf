@@ -3,6 +3,12 @@ provider "aws" {
   version = 2.54
 }
 
+variable "server_port" {
+  description = "the port server will use for http requests"
+  type        = number
+  default     = 8080
+}
+
 resource "aws_instance" "example" {
   ami                    = "ami-0620d12a9cf777c87"
   instance_type          = "t2.micro"
@@ -11,7 +17,7 @@ resource "aws_instance" "example" {
   user_data = <<-EOF
                     #!/bin/bash
                     echo "Hello, World" > index.html
-                    nohup busybox httpd -f -p 8080 &
+                    nohup busybox httpd -f -p "${var.server_port}" &
                 EOF
 
   tags = {
@@ -23,9 +29,14 @@ resource "aws_security_group" "example_sg" {
   name = "terraform-example-sg"
 
   ingress {
-    from_port   = 8080
-    to_port     = 8080
+    from_port   = var.server_port
+    to_port     = var.server_port
     protocol    = "tcp"
     cidr_blocks = ["0.0.0.0/0"]
   }
+}
+
+output "public_ip" {
+  value       = aws_instance.example.public_ip
+  description = "public ip of the web server"
 }
