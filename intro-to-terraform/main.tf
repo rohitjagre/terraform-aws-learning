@@ -1,6 +1,6 @@
 provider "aws" {
   region  = "ap-south-1"
-  version = 2.54
+  version = "~> 2.54"
 }
 
 resource "aws_instance" "example" {
